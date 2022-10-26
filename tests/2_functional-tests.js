@@ -81,7 +81,6 @@ suite("Functional Tests", function () {
       assigned_to: faker.name.fullName(),
       status_text: faker.random.words(),
     };
-    const targetDate = new Date();
     chai
       .request(server)
       .post("/api/issues/apitest")
@@ -91,6 +90,32 @@ suite("Functional Tests", function () {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
         assert.deepEqual(output, { error: "required field(s) missing" });
+        done();
+      });
+  });
+  // #4
+  test("GET project issues from /api/issues/{project}", function (done) {
+    chai
+      .request(server)
+      .get("/api/issues/apitest")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.isDefined(output);
+        assert.isArray(output);
+        done();
+      });
+  });
+  // #5
+  test("GET project issues from /api/issues/{project} with filter", function (done) {
+    chai
+      .request(server)
+      .get("/api/issues/apitest?open=true")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.isDefined(output);
+        assert.isArray(output);
         done();
       });
   });
