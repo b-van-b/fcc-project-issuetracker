@@ -8,6 +8,7 @@ chai.use(chaiHttp);
 
 suite("Functional Tests", function () {
   // #1
+  // Create an issue with every field: POST request to /api/issues/{project}
   test("POST every field to /api/issues/{project}", function (done) {
     const data = {
       issue_title: faker.random.words(),
@@ -43,6 +44,7 @@ suite("Functional Tests", function () {
       });
   });
   // #2
+  // Create an issue with only required fields: POST request to /api/issues/{project}
   test("POST only required fields to /api/issues/{project}", function (done) {
     const data = {
       issue_title: faker.random.words(),
@@ -76,6 +78,7 @@ suite("Functional Tests", function () {
       });
   });
   // #3
+  // Create an issue with missing required fields: POST request to /api/issues/{project}
   test("POST missing required fields (all) to /api/issues/{project}", function (done) {
     const data = {
       assigned_to: faker.name.fullName(),
@@ -94,6 +97,7 @@ suite("Functional Tests", function () {
       });
   });
   // #4
+  // View issues on a project: GET request to /api/issues/{project}
   test("GET project issues from /api/issues/{project}", function (done) {
     chai
       .request(server)
@@ -107,6 +111,7 @@ suite("Functional Tests", function () {
       });
   });
   // #5
+  // View issues on a project with one filter: GET request to /api/issues/{project}
   test("GET project issues from /api/issues/{project} with filter", function (done) {
     chai
       .request(server)
@@ -119,4 +124,22 @@ suite("Functional Tests", function () {
         done();
       });
   });
+  // #6
+  // View issues on a project with multiple filters: GET request to /api/issues/{project}
+  // #7
+  // Update one field on an issue: PUT request to /api/issues/{project}
+  // #8
+  // Update multiple fields on an issue: PUT request to /api/issues/{project}
+  // #9
+  // Update an issue with missing _id: PUT request to /api/issues/{project}
+  // #10
+  // Update an issue with no fields to update: PUT request to /api/issues/{project}
+  // #11
+  // Update an issue with an invalid _id: PUT request to /api/issues/{project}
+  // #12
+  // Delete an issue: DELETE request to /api/issues/{project}
+  // #13
+  // Delete an issue with an invalid _id: DELETE request to /api/issues/{project}
+  // #14
+  // Delete an issue with missing _id: DELETE request to /api/issues/{project}
 });
