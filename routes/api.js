@@ -40,5 +40,9 @@ module.exports = function (app, models) {
       let project = req.params.project;
       console.log("\nDELETE /" + project);
       console.log(req.body);
+      Issue.removeOne(project, req.body._id, (err, data) => {
+        if (err) return console.log(err);
+        res.json(data);
+      });
     });
 };

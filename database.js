@@ -84,5 +84,24 @@ Issue.updateOne = (projectName, params, done) => {
   );
 };
 
+Issue.removeOne = (projectName, _id, done) => {
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return done({ error: "invalid ObjectId" });
+  }
+  console.log(`Deleting issue ${_id} in project ${projectName}`);
+  Issue.deleteOne({ project_name: projectName, _id: _id }, (err, data) => {
+    if (err) return console.log(err);
+    const report = {
+      _id: _id,
+    };
+    if (data.acknowledged && data.deletedCount) {
+      report.result = "successfully deleted";
+    } else {
+      report.error = "could not delete";
+    }
+    done(null, report);
+  });
+};
+
 // exports
 module.exports = { connect, models: { Project, Issue } };
