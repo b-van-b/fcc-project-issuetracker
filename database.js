@@ -21,10 +21,6 @@ const connect = () => {
 };
 
 // schemas
-const projectSchema = new Schema({
-  name: String,
-});
-
 const issueSchema = new Schema({
   issue_title: String,
   issue_text: String,
@@ -38,7 +34,6 @@ const issueSchema = new Schema({
 });
 
 // models
-const Project = mongoose.model("Project", projectSchema);
 const Issue = mongoose.model("Issue", issueSchema);
 
 Issue.addOne = (projectName, params, done) => {
@@ -119,4 +114,4 @@ Issue.findAllInProject = (projectName, done) => {
 };
 
 // exports
-module.exports = { connect, models: { Project, Issue } };
+module.exports = { connect, models: { Issue } };

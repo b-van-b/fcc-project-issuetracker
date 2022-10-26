@@ -1,8 +1,7 @@
 "use strict";
 
 module.exports = function (app, models) {
-  const Person = models.Person,
-    Issue = models.Issue;
+  const Issue = models.Issue;
 
   app
     .route("/api/issues/:project")
