@@ -62,6 +62,9 @@ Issue.addOne = (projectName, params, done) => {
 };
 
 Issue.updateOne = (projectName, params, done) => {
+  if (!mongoose.Types.ObjectId.isValid(params._id)) {
+    return done({ error: "invalid ObjectId" });
+  }
   console.log(`Searching for issue ${params._id} in project ${projectName}`);
   // find the issue by id & project name
   Issue.findOne(
