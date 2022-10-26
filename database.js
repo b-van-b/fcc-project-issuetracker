@@ -110,5 +110,13 @@ Issue.removeOne = (projectName, _id, done) => {
   });
 };
 
+Issue.findAllInProject = (projectName, done) => {
+  console.log("Finding all issues in project " + projectName);
+  Issue.find({ name: projectName }, (err, data) => {
+    if (err) return console.log(err);
+    done(null, data);
+  });
+};
+
 // exports
 module.exports = { connect, models: { Project, Issue } };

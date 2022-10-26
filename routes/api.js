@@ -7,10 +7,15 @@ module.exports = function (app, models) {
   app
     .route("/api/issues/:project")
 
+    // view all project issues
     .get(function (req, res) {
       let project = req.params.project;
       console.log("\nGET /" + project);
       console.log(req.body);
+      Issue.findAllInProject(project, (err, data) => {
+        if (err) return console.log(err);
+        res.json(data);
+      });
     })
 
     // submit new issue
