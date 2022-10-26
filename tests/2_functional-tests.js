@@ -7,20 +7,27 @@ const { faker } = require("@faker-js/faker");
 chai.use(chaiHttp);
 
 suite("Functional Tests", function () {
+  // save dataset that was input for later testing with output
+  const testdata = [];
+  // generate unique project name based on UTC date & time of testing
+  const projectName = new Date().toUTCString().replaceAll(/[ ,:]/g, "-");
+  // common endpoint for each request
+  const endpoint = "/api/issues/" + projectName;
+
   // #1
   // Create an issue with every field: POST request to /api/issues/{project}
   test("POST every field to /api/issues/{project}", function (done) {
     const data = {
       issue_title: faker.random.words(),
       issue_text: faker.random.words(5),
-      created_by: faker.name.fullName(),
+      created_by: "Mark",
       assigned_to: faker.name.fullName(),
       status_text: faker.random.words(),
     };
     const targetDate = new Date();
     chai
       .request(server)
-      .post("/api/issues/apitest")
+      .post(endpoint)
       .type("form")
       .send(data)
       .end(function (err, res) {
@@ -40,6 +47,9 @@ suite("Functional Tests", function () {
         assert.equal(date.getFullYear(), targetDate.getFullYear());
         assert.equal(date.getMonth(), targetDate.getMonth());
         assert.equal(date.getDate(), targetDate.getDate());
+
+        // record for later testing
+        testdata.push(output);
         done();
       });
   });
@@ -49,12 +59,12 @@ suite("Functional Tests", function () {
     const data = {
       issue_title: faker.random.words(),
       issue_text: faker.random.words(5),
-      created_by: faker.name.fullName(),
+      created_by: "John",
     };
     const targetDate = new Date();
     chai
       .request(server)
-      .post("/api/issues/apitest")
+      .post(endpoint)
       .type("form")
       .send(data)
       .end(function (err, res) {
@@ -74,6 +84,9 @@ suite("Functional Tests", function () {
         assert.equal(date.getFullYear(), targetDate.getFullYear());
         assert.equal(date.getMonth(), targetDate.getMonth());
         assert.equal(date.getDate(), targetDate.getDate());
+
+        // record for later testing
+        testdata.push(output);
         done();
       });
   });
@@ -86,7 +99,7 @@ suite("Functional Tests", function () {
     };
     chai
       .request(server)
-      .post("/api/issues/apitest")
+      .post(endpoint)
       .type("form")
       .send(data)
       .end(function (err, res) {
@@ -101,12 +114,13 @@ suite("Functional Tests", function () {
   test("GET project issues from /api/issues/{project}", function (done) {
     chai
       .request(server)
-      .get("/api/issues/apitest")
+      .get(endpoint)
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
         assert.isDefined(output);
         assert.isArray(output);
+        assert.deepEqual(output, testdata);
         done();
       });
   });
@@ -115,12 +129,16 @@ suite("Functional Tests", function () {
   test("GET project issues from /api/issues/{project} with filter", function (done) {
     chai
       .request(server)
-      .get("/api/issues/apitest?open=true")
+      .get(endpoint + "?created_by=Mark")
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
         assert.isDefined(output);
         assert.isArray(output);
+        assert.deepEqual(
+          output,
+          testdata.filter((d) => d.created_by == "Mark")
+        );
         done();
       });
   });
