@@ -66,6 +66,7 @@ Issue.updateOne = (projectName, params, done) => {
     return done({ error: "invalid ObjectId" });
   }
   console.log(`Searching for issue ${params._id} in project ${projectName}`);
+  let updated = false;
   // find the issue by id & project name
   Issue.findOne(
     { project_name: projectName, _id: params._id },
@@ -75,9 +76,12 @@ Issue.updateOne = (projectName, params, done) => {
       // if found, update any params that are not _id or empty strings
       Object.keys(params).forEach((key) => {
         if (key != "_id" && params[key] !== "") {
+          updated = true;
           issue[key] = params[key];
         }
       });
+      // set updated_on
+      if (updated) issue.updated_on = new Date();
       // save issue doc & pass to callback
       issue.save((err, data) => {
         if (err) return console.log(data);
