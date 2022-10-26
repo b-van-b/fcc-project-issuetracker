@@ -61,5 +61,28 @@ Issue.addOne = (projectName, params, done) => {
   });
 };
 
+Issue.updateOne = (projectName, params, done) => {
+  console.log(`Searching for issue ${params._id} in project ${projectName}`);
+  // find the issue by id & project name
+  Issue.findOne(
+    { project_name: projectName, _id: params._id },
+    (err, issue) => {
+      if (err) return console.log(err);
+      if (!issue) return console.log("No issue found!");
+      // if found, update any params that are not _id or empty strings
+      Object.keys(params).forEach((key) => {
+        if (key != "_id" && params[key] !== "") {
+          issue[key] = params[key];
+        }
+      });
+      // save issue doc & pass to callback
+      issue.save((err, data) => {
+        if (err) return console.log(data);
+        done(null, data);
+      });
+    }
+  );
+};
+
 // exports
 module.exports = { connect, models: { Project, Issue } };

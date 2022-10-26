@@ -13,6 +13,7 @@ module.exports = function (app, models) {
       console.log(req.body);
     })
 
+    // submit new issue
     .post(function (req, res) {
       let project = req.params.project;
       console.log("\nPOST /" + project);
@@ -23,12 +24,18 @@ module.exports = function (app, models) {
       });
     })
 
+    // update issue
     .put(function (req, res) {
       let project = req.params.project;
       console.log("\nPUT /" + project);
       console.log(req.body);
+      Issue.updateOne(project, req.body, (err, data) => {
+        if (err) return console.log(err);
+        res.json(data);
+      });
     })
 
+    // delete issue
     .delete(function (req, res) {
       let project = req.params.project;
       console.log("\nDELETE /" + project);
