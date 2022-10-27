@@ -46,6 +46,10 @@ const issueSchema = new Schema({
 const Issue = mongoose.model("Issue", issueSchema);
 
 Issue.addOne = (projectName, params, done) => {
+  // check for missing required fields
+  if (!(params.issue_title && params.issue_text && params.created_by)) {
+    return done(null, { error: "required field(s) missing" });
+  }
   // create new issue
   const issue = new Issue({
     issue_title: params.issue_title,
