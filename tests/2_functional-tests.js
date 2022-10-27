@@ -274,6 +274,24 @@ suite("Functional Tests", function () {
   });
   // #12
   // Delete an issue: DELETE request to /api/issues/{project}
+  test("DELETE issue _id at /api/issues/{project}", function (done) {
+    const data = {
+      _id: testdata[0]._id,
+    };
+    chai
+      .request(server)
+      .delete(endpoint)
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          result: "successfully deleted",
+          _id: data._id,
+        });
+        done();
+      });
+  });
   // #13
   // Delete an issue with an invalid _id: DELETE request to /api/issues/{project}
   // #14
