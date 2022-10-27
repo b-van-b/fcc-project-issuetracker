@@ -231,6 +231,25 @@ suite("Functional Tests", function () {
   });
   // #10
   // Update an issue with no fields to update: PUT request to /api/issues/{project}
+  test("PUT update (no fields to update) to /api/issues/{project}", function (done) {
+    const data = {
+      _id: testdata[0]._id,
+    };
+    chai
+      .request(server)
+      .put(endpoint)
+      .type("form")
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          error: "no update field(s) sent",
+          _id: data._id,
+        });
+        done();
+      });
+  });
   // #11
   // Update an issue with an invalid _id: PUT request to /api/issues/{project}
   // #12
