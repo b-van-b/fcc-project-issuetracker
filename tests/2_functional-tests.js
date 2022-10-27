@@ -254,7 +254,7 @@ suite("Functional Tests", function () {
   // Update an issue with an invalid _id: PUT request to /api/issues/{project}
   test("PUT update (invalid _id) to /api/issues/{project}", function (done) {
     const data = {
-      _id: "notanid",
+      _id: faker.random.word(),
       created_by: faker.name.fullName(),
     };
     chai
@@ -294,6 +294,41 @@ suite("Functional Tests", function () {
   });
   // #13
   // Delete an issue with an invalid _id: DELETE request to /api/issues/{project}
+  test("DELETE issue (invalid _id) at /api/issues/{project}", function (done) {
+    const data = {
+      _id: faker.random.word(),
+    };
+    chai
+      .request(server)
+      .delete(endpoint)
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          error: "could not delete",
+          _id: data._id,
+        });
+        done();
+      });
+  });
   // #14
   // Delete an issue with missing _id: DELETE request to /api/issues/{project}
+  test("DELETE issue (missing _id) at /api/issues/{project}", function (done) {
+    const data = {
+      _id: "",
+    };
+    chai
+      .request(server)
+      .delete(endpoint)
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          error: "missing _id",
+        });
+        done();
+      });
+  });
 });
