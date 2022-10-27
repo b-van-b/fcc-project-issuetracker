@@ -252,6 +252,26 @@ suite("Functional Tests", function () {
   });
   // #11
   // Update an issue with an invalid _id: PUT request to /api/issues/{project}
+  test("PUT update (invalid _id) to /api/issues/{project}", function (done) {
+    const data = {
+      _id: "notanid",
+      created_by: faker.name.fullName(),
+    };
+    chai
+      .request(server)
+      .put(endpoint)
+      .type("form")
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          error: "could not update",
+          _id: data._id,
+        });
+        done();
+      });
+  });
   // #12
   // Delete an issue: DELETE request to /api/issues/{project}
   // #13
