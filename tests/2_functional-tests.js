@@ -176,6 +176,11 @@ suite("Functional Tests", function () {
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          result: "successfully updated",
+          _id: data._id,
+        });
+        /*
         data = Object.assign({}, testdata[0], data);
         Object.keys(data).forEach((key) => {
           if (key == "updated_on") {
@@ -186,6 +191,7 @@ suite("Functional Tests", function () {
             assert.equal(output[key], data[key]);
           }
         });
+        */
         done();
       });
   });
@@ -205,6 +211,11 @@ suite("Functional Tests", function () {
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
+        assert.deepEqual(output, {
+          result: "successfully updated",
+          _id: data._id,
+        });
+        /*
         data = Object.assign({}, testdata[0], data);
         Object.keys(data).forEach((key) => {
           if (key == "updated_on") {
@@ -215,6 +226,7 @@ suite("Functional Tests", function () {
             assert.equal(output[key], data[key]);
           }
         });
+        */
         done();
       });
   });

@@ -106,7 +106,7 @@ Issue.updateOne = (projectName, params, done) => {
           console.log(err);
           return done(null, { error: "could not update", _id: params._id });
         }
-        done(null, data);
+        done(null, { result: "successfully updated", _id: params._id });
       });
     }
   );
