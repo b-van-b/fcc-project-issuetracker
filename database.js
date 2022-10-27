@@ -70,8 +70,13 @@ Issue.addOne = (projectName, params, done) => {
 };
 
 Issue.updateOne = (projectName, params, done) => {
+  // reject missing _id
+  if (!params._id) {
+    return done(null, { error: "missing _id" });
+  }
+  // reject invalid _id
   if (!mongoose.Types.ObjectId.isValid(params._id)) {
-    return done({ error: "invalid ObjectId" });
+    return done(null, { error: "could not update", _id: params._id });
   }
   console.log(`Searching for issue ${params._id} in project ${projectName}`);
   let updated = false;
@@ -92,7 +97,11 @@ Issue.updateOne = (projectName, params, done) => {
       if (updated) issue.updated_on = new Date();
       // save issue doc & pass to callback
       issue.save((err, data) => {
-        if (err) return console.log(data);
+        // send data to user indicating update failed
+        if (err) {
+          console.log(err);
+          return done(null, { error: "could not update", _id: params._id });
+        }
         done(null, data);
       });
     }
