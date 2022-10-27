@@ -113,8 +113,13 @@ Issue.updateOne = (projectName, params, done) => {
 };
 
 Issue.removeOne = (projectName, _id, done) => {
+  // reject missing _id
+  if (!_id) {
+    return done(null, { error: "missing _id" });
+  }
+  // reject invalid _id
   if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return done({ error: "invalid ObjectId" });
+    return done(null, { error: "could not delete", _id: _id });
   }
   console.log(`Deleting issue ${_id} in project ${projectName}`);
   Issue.deleteOne({ project_name: projectName, _id: _id }, (err, data) => {
