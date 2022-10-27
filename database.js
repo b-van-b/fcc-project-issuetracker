@@ -78,6 +78,10 @@ Issue.updateOne = (projectName, params, done) => {
   if (!mongoose.Types.ObjectId.isValid(params._id)) {
     return done(null, { error: "could not update", _id: params._id });
   }
+  // reject missing update fields (only _id field present)
+  if (Object.keys(params).length == 1) {
+    return done(null, { error: "no update field(s) sent", _id: params._id });
+  }
   console.log(`Searching for issue ${params._id} in project ${projectName}`);
   let updated = false;
   // find the issue by id & project name
