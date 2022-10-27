@@ -118,9 +118,12 @@ Issue.removeOne = (projectName, _id, done) => {
   });
 };
 
-Issue.findAllInProject = (projectName, done) => {
+Issue.findAllInProject = (projectName, filter, done) => {
   console.log("Finding all issues in project " + projectName);
-  Issue.find({ project_name: projectName }, (err, data) => {
+  const searchQuery = Object.assign({ project_name: projectName }, filter);
+  console.log("Filter: " + JSON.stringify(searchQuery));
+
+  Issue.find(searchQuery, (err, data) => {
     if (err) return console.log(err);
     done(null, data);
   });
