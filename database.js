@@ -22,8 +22,14 @@ const connect = () => {
 
 // schemas
 const issueSchema = new Schema({
-  issue_title: String,
-  issue_text: String,
+  issue_title: {
+    type: String,
+    required: true,
+  },
+  issue_text: {
+    type: String,
+    required: true,
+  },
   created_by: String,
   assigned_to: String,
   status_text: String,
