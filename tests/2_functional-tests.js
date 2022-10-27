@@ -187,6 +187,29 @@ suite("Functional Tests", function () {
   });
   // #8
   // Update multiple fields on an issue: PUT request to /api/issues/{project}
+  test("PUT update (multiple fields) to /api/issues/{project}", function (done) {
+    const data = {
+      _id: testdata[0]._id,
+      assigned_to: faker.name.fullName(),
+      status_text: faker.random.words(),
+    };
+    chai
+      .request(server)
+      .put(endpoint)
+      .type("form")
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        Object.keys(testdata[0]).forEach((key) => {
+          if (!data[key]) {
+            data[key] = testdata[key];
+          }
+        });
+        assert.deepEqual(output, data);
+        done();
+      });
+  });
   // #9
   // Update an issue with missing _id: PUT request to /api/issues/{project}
   // #10
