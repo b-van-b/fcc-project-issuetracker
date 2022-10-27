@@ -18,7 +18,7 @@ suite("Functional Tests", function () {
   // Create an issue with every field: POST request to /api/issues/{project}
   test("POST every field to /api/issues/{project}", function (done) {
     const data = {
-      issue_title: faker.random.words(),
+      issue_title: "Filtered",
       issue_text: faker.random.words(5),
       created_by: "Mark",
       assigned_to: faker.name.fullName(),
@@ -120,6 +120,7 @@ suite("Functional Tests", function () {
         const output = JSON.parse(res.text);
         assert.isDefined(output);
         assert.isArray(output);
+        assert.equal(output.length, testdata.length);
         assert.deepEqual(output, testdata);
         done();
       });
@@ -135,17 +136,34 @@ suite("Functional Tests", function () {
         const output = JSON.parse(res.text);
         assert.isDefined(output);
         assert.isArray(output);
-        assert.deepEqual(
-          output,
-          testdata.filter((d) => d.created_by == "Mark")
-        );
+        const filteredData = testdata.filter((d) => d.created_by == "Mark");
+        assert.equal(output.length, filteredData.length);
+        assert.deepEqual(output, filteredData);
         done();
       });
   });
   // #6
   // View issues on a project with multiple filters: GET request to /api/issues/{project}
+  test("GET project issues from /api/issues/{project} with multiple filters", function (done) {
+    chai
+      .request(server)
+      .get(endpoint + "?created_by=Mark&issue_title=Filtered")
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.isDefined(output);
+        assert.isArray(output);
+        const filteredData = testdata.filter((d) => {
+          return d.created_by == "Mark" && d.issue_title == "Filtered";
+        });
+        assert.equal(output.length, filteredData.length);
+        assert.deepEqual(output, filteredData);
+        done();
+      });
+  });
   // #7
   // Update one field on an issue: PUT request to /api/issues/{project}
+
   // #8
   // Update multiple fields on an issue: PUT request to /api/issues/{project}
   // #9
