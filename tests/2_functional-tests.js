@@ -164,7 +164,7 @@ suite("Functional Tests", function () {
   // #7
   // Update one field on an issue: PUT request to /api/issues/{project}
   test("PUT update (single field) to /api/issues/{project}", function (done) {
-    const data = {
+    let data = {
       _id: testdata[0]._id,
       assigned_to: faker.name.fullName(),
     };
@@ -176,19 +176,23 @@ suite("Functional Tests", function () {
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
-        Object.keys(testdata[0]).forEach((key) => {
-          if (!data[key]) {
-            data[key] = testdata[key];
+        data = Object.assign({}, testdata[0], data);
+        Object.keys(data).forEach((key) => {
+          if (key == "updated_on") {
+            const older = new Date(data.updated_on);
+            const newer = new Date(output.updated_on);
+            assert.isTrue(newer > older);
+          } else {
+            assert.equal(output[key], data[key]);
           }
         });
-        assert.deepEqual(output, data);
         done();
       });
   });
   // #8
   // Update multiple fields on an issue: PUT request to /api/issues/{project}
   test("PUT update (multiple fields) to /api/issues/{project}", function (done) {
-    const data = {
+    let data = {
       _id: testdata[0]._id,
       assigned_to: faker.name.fullName(),
       status_text: faker.random.words(),
@@ -201,12 +205,16 @@ suite("Functional Tests", function () {
       .end(function (err, res) {
         assert.equal(res.status, 200);
         const output = JSON.parse(res.text);
-        Object.keys(testdata[0]).forEach((key) => {
-          if (!data[key]) {
-            data[key] = testdata[key];
+        data = Object.assign({}, testdata[0], data);
+        Object.keys(data).forEach((key) => {
+          if (key == "updated_on") {
+            const older = new Date(data.updated_on);
+            const newer = new Date(output.updated_on);
+            assert.isTrue(newer > older);
+          } else {
+            assert.equal(output[key], data[key]);
           }
         });
-        assert.deepEqual(output, data);
         done();
       });
   });
