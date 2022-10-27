@@ -89,7 +89,11 @@ Issue.updateOne = (projectName, params, done) => {
     { project_name: projectName, _id: params._id },
     (err, issue) => {
       if (err) return console.log(err);
-      if (!issue) return console.log("No issue found!");
+      // if not found, return standard failure message
+      if (!issue) {
+        console.log("No issue found!");
+        return done(null, { error: "could not update", _id: params._id });
+      }
       // if found, update any params that are not _id or empty strings
       Object.keys(params).forEach((key) => {
         if (key != "_id" && params[key] !== "") {
