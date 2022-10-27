@@ -212,6 +212,23 @@ suite("Functional Tests", function () {
   });
   // #9
   // Update an issue with missing _id: PUT request to /api/issues/{project}
+  test("PUT update (missing _id) to /api/issues/{project}", function (done) {
+    const data = {
+      assigned_to: faker.name.fullName(),
+      status_text: faker.random.words(),
+    };
+    chai
+      .request(server)
+      .put(endpoint)
+      .type("form")
+      .send(data)
+      .end(function (err, res) {
+        assert.equal(res.status, 200);
+        const output = JSON.parse(res.text);
+        assert.deepEqual(output, { error: "missing _id" });
+        done();
+      });
+  });
   // #10
   // Update an issue with no fields to update: PUT request to /api/issues/{project}
   // #11
