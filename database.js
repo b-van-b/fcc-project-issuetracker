@@ -30,7 +30,10 @@ const issueSchema = new Schema({
     type: String,
     required: true,
   },
-  created_by: String,
+  created_by: {
+    type: String,
+    required: true,
+  },
   assigned_to: String,
   status_text: String,
   created_on: Date,
